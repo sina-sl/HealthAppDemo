@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/weight_fragment">
+
+    <fragment
+        android:id="@+id/weight_fragment"
+        android:name="ir.ttic.footweight.fragments.WeightFragment"
+        android:label="WeightFragment"
+        tools:layout="@layout/fragment_weight"/>
+    <fragment
+        android:id="@+id/footRaceFragment"
+        android:name="ir.ttic.footweight.fragments.FootRaceFragment"
+        android:label="FootRaceFragment"
+        tools:layout="@layout/fragment_foot_race"/>
+    <fragment
+        android:id="@+id/weightCurveFragment"
+        android:name="ir.ttic.footweight.fragments.WeightCurveFragment"
+        android:label="WeightCurveFragment"
+        tools:layout="@layout/fragment_weight_curve"/>
+</navigation>

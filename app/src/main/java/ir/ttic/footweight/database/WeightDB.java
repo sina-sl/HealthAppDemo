@@ -59,6 +59,7 @@ public class WeightDB {
     cursor.moveToFirst();
     for (int i = 0; i < cursor.getCount(); i++) {
       weightModels.add(cursorToWeightModel(cursor));
+      cursor.moveToNext();
     }
 
     cursor.close();

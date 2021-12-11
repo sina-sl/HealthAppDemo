@@ -3,22 +3,21 @@ package ir.ttic.footweight.model;
 import android.annotation.SuppressLint;
 
 import com.anychart.chart.common.dataentry.DataEntry;
-import com.anychart.chart.common.dataentry.ValueDataEntry;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-public class WeightModel extends DataEntry {
+public class Weight extends DataEntry {
 
   Long date;
   double weight;
   @SuppressLint("SimpleDateFormat")
-  static final DateFormat df = new SimpleDateFormat("dd\\sMMMMM");
+  static final DateFormat df = new SimpleDateFormat("MMM dd");
 
 
-  public WeightModel(Long date, double weight) {
+  public Weight(Long date, double weight) {
     setValue("x",df.format(new Date(date)));
     setValue("value",weight);
     this.date = date;
@@ -37,7 +36,7 @@ public class WeightModel extends DataEntry {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    WeightModel that = (WeightModel) o;
+    Weight that = (Weight) o;
     return Double.compare(that.getWeight(),getWeight()) == 0 && getDate().equals(that.getDate());
   }
 

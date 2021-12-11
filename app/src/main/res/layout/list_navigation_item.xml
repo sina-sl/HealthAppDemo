@@ -3,42 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingStart="5dp"
-    android:paddingEnd="10dp"
-    android:layout_margin="10dp"
+    android:padding="5dp"
+    android:layout_margin="5dp"
     android:background="@drawable/tab_indicator"
     android:backgroundTint="@color/white">
 
     <TextView
-        android:id="@+id/txt_date"
+        android:id="@+id/txt_navigation_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2016-02-02"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_delete"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/black"/>
-
-    <TextView
-        android:id="@+id/txt_weight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="88Kg"
-        android:textSize="20sp"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_delete"
-        app:layout_constraintEnd_toStartOf="@+id/btn_delete"
-        app:layout_constraintStart_toEndOf="@id/txt_date"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_navigation_delete"
+        app:layout_constraintEnd_toStartOf="@+id/btn_navigation_delete"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_delete"
+        android:id="@+id/btn_navigation_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:backgroundTint="@color/gold"
         android:text="delete"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

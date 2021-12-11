@@ -1,5 +1,6 @@
 package ir.ttic.footweight.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,14 @@ import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
 import com.anychart.core.Chart;
 import com.anychart.core.cartesian.series.Line;
+import com.anychart.core.cartesian.series.Spline;
 import com.anychart.data.Mapping;
 import com.anychart.data.Set;
 import com.anychart.enums.Anchor;
 import com.anychart.enums.MarkerType;
 import com.anychart.enums.TooltipPositionMode;
+import com.anychart.graphics.vector.Fill;
+import com.anychart.graphics.vector.SolidFill;
 import com.anychart.graphics.vector.Stroke;
 
 import java.util.ArrayList;
@@ -34,6 +38,9 @@ public class WeightCurveFragment extends Fragment {
 
 
   private AnyChartView anyChart;
+  private Cartesian cartesian;
+  private Spline spline;
+  private Set set;
 
   @Nullable
   @Override
@@ -47,51 +54,48 @@ public class WeightCurveFragment extends Fragment {
 
     anyChart = view.findViewById(R.id.any_chart_view);
 
-    Cartesian cartesian =  AnyChart.line();
-
+    set = Set.instantiate();
+    cartesian = AnyChart.line();
     cartesian.animation(true);
-
-    cartesian.padding(10d, 20d, 5d, 20d);
-
-    cartesian.crosshair().enabled(true);
-    cartesian.crosshair()
-      .yLabel(true)
-      .yStroke((Stroke) null, null, null, (String) null, (String) null);
-
-    cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
-
-    cartesian.yAxis(0).title("Your Weight (Kg)");
-    cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
-
-    ArrayList<DataEntry> dataEntries = new ArrayList<>(MainActivity.getWeightItems());
-
-    Set set = Set.instantiate();
-    set.data(dataEntries);
-    Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
-
-//    Line series1 =
-//    series1.name("Weight");
-//    series1.hovered().markers().enabled(true);
-//    series1.hovered().markers()
-//      .type(MarkerType.CIRCLE)
-//      .size(4d);
-//    series1.tooltip()
-//      .position("right")
-//      .anchor(Anchor.LEFT_CENTER)
-//      .offsetX(5d)
-//      .offsetY(5d);
-
-    cartesian.line(series1Mapping);
     cartesian.legend().enabled(true);
     cartesian.legend().fontSize(13d);
-    cartesian.legend().padding(0d, 0d, 10d, 0d);
+    cartesian.background().enabled();
+    cartesian.crosshair().yLabel(true);
+    cartesian.crosshair().enabled(true);
+    cartesian.padding(10d, 20d, 5d, 20d);
+    cartesian.background().fill("#151515");
+    cartesian.yAxis(0).title("Your Weight (Kg)");
+    cartesian.yAxis(0).title().fontColor("#FBFCD4");
+    cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
+    cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
-
-
-
-    cartesian.data(dataEntries);
-
+    set.data(new ArrayList<>(MainActivity.getWeightItems()));
+    spline = cartesian.spline(
+      set.mapAs(
+        "{ x: 'x', value: 'value' }"),
+      ""
+    ).stroke("#FBFCD4");
 
     anyChart.setChart(cartesian);
+
+  }
+
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    spline.data(new ArrayList<>(MainActivity.getWeightItems()));
+
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+  }
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
   }
 }

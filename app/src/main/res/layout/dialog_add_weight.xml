@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/dark"
         app:layout_constraintTop_toTopOf="parent">
 
 
@@ -21,23 +21,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="parent">
 
-        <EditText
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:gravity="center"
             android:hint="New Weight"
-            android:id="@+id/edt_weight"
+            android:id="@+id/layout_counter"
             android:layout_height="?attr/actionBarSize"
             android:layout_margin="10dp"
             android:layout_width="0dp"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
-            tools:layout_editor_absoluteX="10dp"
-            android:inputType="number" />
+            android:inputType="number"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/btn_minus"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_indicator"
+                android:src="@drawable/ic_baseline_navigate_before_24"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_weight"
+                app:layout_constraintEnd_toStartOf="@+id/txt_weight"
+                app:layout_constraintTop_toTopOf="@+id/txt_weight" />
+
+            <TextView
+                android:id="@+id/txt_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25 Kg"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_indicator"
+                android:src="@drawable/ic_baseline_navigate_next_24"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_weight"
+                app:layout_constraintStart_toEndOf="@+id/txt_weight"
+                app:layout_constraintTop_toTopOf="@+id/txt_weight" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:padding="5dp"
             android:gravity="center"
             android:id="@+id/textView"
             android:layout_height="wrap_content"
@@ -45,21 +80,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="Add Current Weight"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="25sp"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <Button
-            android:id="@+id/btn_add"
+            android:id="@+id/btn_add_weight"
             android:layout_height="?attr/actionBarSize"
             android:layout_margin="10dp"
             android:layout_width="0dp"
             android:text="add"
+            android:backgroundTint="@color/gold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_weight" />
+            app:layout_constraintTop_toBottomOf="@id/layout_counter" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

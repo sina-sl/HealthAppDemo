@@ -13,5 +13,28 @@
         tools:context=".fragments.FootRaceFragment" />
 
 
+    <Button
+        android:id="@+id/btn_navigation_list"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:text="Navigation List"
+        android:elevation="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/tab_indicator"
+        app:backgroundTint="@color/gold"
+        app:layout_constraintBottom_toTopOf="@id/btn_navigation"/>
+
+    <Button
+        android:id="@+id/btn_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:text="start navigation"
+        android:elevation="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/tab_indicator"
+        app:backgroundTint="@color/gold"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

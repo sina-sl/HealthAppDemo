@@ -1,19 +1,14 @@
 package ir.ttic.footweight.fragments;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import ir.ttic.footweight.MainActivity;
 import ir.ttic.footweight.R;
 import ir.ttic.footweight.adapters.WeightListAdapter;
-import ir.ttic.footweight.database.WeightDB;
-import ir.ttic.footweight.model.WeightModel;
+import ir.ttic.footweight.database.Database;
+import ir.ttic.footweight.dialogs.NewWeightDialog;
+import ir.ttic.footweight.model.Weight;
 
 public class WeightFragment extends Fragment {
 
@@ -45,59 +41,78 @@ public class WeightFragment extends Fragment {
 
     btnAddItem = view.findViewById(R.id.btn_add_item);
     recyclerView = view.findViewById(R.id.weight_recycler_list);
-    weightListAdapter = new WeightListAdapter(getContext(),this::onDeleteClick);
+    weightListAdapter = new WeightListAdapter(getContext(), this::onDeleteClick);
 
     recyclerView.setAdapter(weightListAdapter);
-    btnAddItem.setOnClickListener(v -> new NewWeightDialog(getContext()).show());
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    btnAddItem.setOnClickListener(this::onAddNewWeightClick);
+
+    recyclerView.setLayoutManager(
+      new LinearLayoutManager(
+        getContext(),
+        LinearLayoutManager.VERTICAL,
+        false
+      )
+    );
 
   }
 
   public void onDeleteClick(int position) {
-    WeightModel model = MainActivity.getWeightItems().get(position);
+    Weight model = MainActivity.getWeightItems().get(position);
     MainActivity.getWeightItems().remove(model);
-    WeightDB.getInstance(getContext()).remove(model);
+    Database.getInstance(getContext()).remove(model);
     weightListAdapter.notifyDataSetChanged();
   }
 
+  public void onAddWeight( Weight weightModel){
 
-  class NewWeightDialog extends Dialog {
+    MainActivity.getWeightItems().add(weightModel);
+    Database.getInstance(getContext()).insertNewWeight(weightModel);
 
-    public NewWeightDialog(@NonNull Context context) {
-      super(context);
-    }
+    weightListAdapter.notifyItemInserted(
+      MainActivity.getWeightItems().indexOf(weightModel)
+    );
+  }
 
-    private EditText edtWeight;
-    private Button btnAdd;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+  public void randomWeights(){
 
-      setContentView(R.layout.dialog_add_weight);
-      getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    for (int i = 0; i < 50; i++) {
 
-      edtWeight = findViewById(R.id.edt_weight);
-      btnAdd = findViewById(R.id.btn_add);
+      Weight weightModel = new Weight(
+        MainActivity.getWeightItems().get(
+          MainActivity.getWeightItems().size() - 1
+        ).getDate() + 86400000,
+        ((int) ((Math.random() * 50) + 40))
+      );
 
-      btnAdd.setOnClickListener(v -> {
+      MainActivity.getWeightItems().add(weightModel);
 
-        WeightModel weightModel = new WeightModel(
-          System.currentTimeMillis(),
-          Double.parseDouble(edtWeight.getText().toString())
-        );
-
-        MainActivity.getWeightItems().add(weightModel);
-        WeightDB.getInstance(getContext()).insertNewWeight(weightModel);
-
-        WeightFragment.this.weightListAdapter.notifyItemInserted(
-          MainActivity.getWeightItems().indexOf(weightModel)
-        );
-
-        dismiss();
-      });
+      weightListAdapter.notifyItemInserted(
+        MainActivity.getWeightItems().indexOf(weightModel)
+      );
 
     }
+
+  }
+
+  public void onAddNewWeightClick(View v) {
+
+    List<Weight> weights = MainActivity.getWeightItems();
+
+    if ( weights.size() > 0 && System.currentTimeMillis() - weights.get(weights.size() - 1).getDate() < 86400000) {
+
+      Toast.makeText(
+        getContext(),
+        "You can only add one weight per 24h",
+        Toast.LENGTH_SHORT
+      ).show();
+
+    } else {
+
+      new NewWeightDialog(this).show(getParentFragmentManager(),null);
+
+    }
+
   }
 
 }

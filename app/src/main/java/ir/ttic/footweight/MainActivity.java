@@ -1,14 +1,13 @@
 package ir.ttic.footweight;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,8 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
-import ir.ttic.footweight.database.WeightDB;
-import ir.ttic.footweight.model.WeightModel;
+import ir.ttic.footweight.adapters.FragmentsAdapter;
+import ir.ttic.footweight.database.Database;
+import ir.ttic.footweight.fragments.FootRaceFragment;
+import ir.ttic.footweight.fragments.WeightCurveFragment;
+import ir.ttic.footweight.fragments.WeightFragment;
+import ir.ttic.footweight.model.Track;
+import ir.ttic.footweight.model.Weight;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
@@ -25,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
   private TabLayout tableLayout;
   private ViewPager2 viewPager;
 
-  private static List<WeightModel> weightItems;
+  private static List<Weight> weightItems;
+  private static List<Track> navigationItems;
 
   private static boolean DEVICE_LOCATION_PERMISSIONS_GRANTED = false;
   private static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -33,8 +38,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
   private static final int locationRequestCode = 1234;
 
 
-  public static List<WeightModel> getWeightItems() {
+  public static List<Weight> getWeightItems() {
     return weightItems;
+  }
+
+  public static List<Track> getNavigationItem() {
+    return navigationItems;
   }
 
   @Override
@@ -42,19 +51,46 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    viewPager = findViewById(R.id.view_pager);
-    tableLayout = findViewById(R.id.tab_layout);
-    tableLayout.addOnTabSelectedListener(this);
-
-    viewPager.setUserInputEnabled(false);
-    viewPager.setAdapter(new FragmentsAdapter(this));
-
-    new TabLayoutMediator(tableLayout, viewPager, (tab, position) -> tab.setText(String.valueOf(position))).attach();
-
-    checkLocationPermission();
-
     if (weightItems == null) {
-      weightItems = WeightDB.getInstance(this).getAllWeights();
+
+      ProgressDialog progressDialog = new ProgressDialog(this);
+      progressDialog.setTitle("Loading , Please Wait");
+      progressDialog.setCancelable(false);
+      progressDialog.show();
+
+      new Thread(() -> {
+
+        weightItems = Database.getInstance(this).getAllWeights();
+        navigationItems = Database.getInstance(this).getNavigations();
+
+        runOnUiThread(()->{
+
+          viewPager = findViewById(R.id.view_pager);
+          tableLayout = findViewById(R.id.tab_layout);
+          tableLayout.addOnTabSelectedListener(this);
+
+          viewPager.setUserInputEnabled(false);
+          viewPager.setAdapter(
+            new FragmentsAdapter(
+              this,
+              new WeightFragment(),
+              new WeightCurveFragment(),
+              new FootRaceFragment()
+            )
+          );
+
+          new TabLayoutMediator(
+            tableLayout, viewPager, (tab, position) -> tab.setText(
+              "Weight,Curve,Race".split(",")[position])
+          ).attach();
+
+          progressDialog.dismiss();
+
+          checkLocationPermission();
+
+        });
+      }).start();
+
     }
   }
 

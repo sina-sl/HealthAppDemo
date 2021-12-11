@@ -7,75 +7,72 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import ir.ttic.footweight.MainActivity;
 import ir.ttic.footweight.R;
+import ir.ttic.footweight.model.Track;
 import ir.ttic.footweight.model.Weight;
 
-public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.ViewHolder>{
+public class NavigatioListAdapter extends RecyclerView.Adapter<NavigatioListAdapter.ViewHolder> {
 
 
   private Context context;
   private List<Weight> weights = new ArrayList<>();
   private OnDeleteClick onDeleteClick;
-  static final DateFormat df = new SimpleDateFormat("MMM dd");
+  private OnItemClick onItemClick;
 
-  public WeightListAdapter(Context context, OnDeleteClick onDeleteClick) {
+  public NavigatioListAdapter(Context context,OnItemClick onItemClick ,OnDeleteClick onDeleteClick) {
     this.context = context;
+    this.onItemClick = onItemClick;
     this.onDeleteClick = onDeleteClick;
   }
 
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_weight_item,parent,false));
+    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_navigation_item, parent, false));
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.bind(MainActivity.getWeightItems().get(position),(btnDelete)->onDeleteClick.onClick(position));
+    holder.itemView.setOnClickListener((itemView) -> onItemClick.onClick(position));
+    holder.bind(MainActivity.getNavigationItem().get(position), (btnDelete) -> onDeleteClick.onClick(position));
   }
 
   @Override
   public int getItemCount() {
-    return MainActivity.getWeightItems().size();
+    return MainActivity.getNavigationItem().size();
   }
 
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView txtWeight;
     private TextView txtDate;
     private Button btnDelete;
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
-
-      txtDate = itemView.findViewById(R.id.txt_date);
-      txtWeight = itemView.findViewById(R.id.txt_weight);
-      btnDelete = itemView.findViewById(R.id.btn_delete);
-
-
+      txtDate = itemView.findViewById(R.id.txt_navigation_date);
+      btnDelete = itemView.findViewById(R.id.btn_navigation_delete);
     }
 
-
-    public void bind(Weight model, View.OnClickListener onDelete){
-
-      txtDate.setText(df.format(model.getDate()));
-      txtWeight.setText(String.valueOf(model.getWeight()));
+    public void bind(Track model, View.OnClickListener onDelete) {
+      txtDate.setText(model.getDate());
       btnDelete.setOnClickListener(onDelete);
-
     }
 
   }
 
-  public interface OnDeleteClick{
+  public interface OnDeleteClick {
+    void onClick(int position);
+  }
+
+  public interface OnItemClick{
     void onClick(int position);
   }
 

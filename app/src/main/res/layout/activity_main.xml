@@ -7,10 +7,20 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.tabs.TabLayout
+        android:padding="5dp"
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="@color/dark"
+        app:tabMode="fixed"
+        app:tabTextColor="@color/white"
+        app:tabIndicatorColor="@color/gold"
+        app:tabGravity="center"
+        app:tabIndicatorGravity="stretch"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicator="@drawable/tab_indicator" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"

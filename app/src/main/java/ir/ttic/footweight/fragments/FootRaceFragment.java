@@ -46,6 +46,8 @@ public class FootRaceFragment extends Fragment implements LocationListener {
   private Button btnNavigationList;
 
   private boolean inNavigation = false;
+  private boolean firstTrack = false;
+
   private Polyline polyline;
   private BitmapDescriptor markerIcon;
 
@@ -94,6 +96,8 @@ public class FootRaceFragment extends Fragment implements LocationListener {
       btnNavigation.setText("end navigation");
       googleMap.clear();
       polyline.remove();
+
+      firstTrack = true;
 
     }
 
@@ -168,15 +172,21 @@ public class FootRaceFragment extends Fragment implements LocationListener {
       currentLatlng.add(newPoint);
       polyline.setPoints(currentLatlng);
 
-      Database.getInstance(getContext()).insertNewTrack(
-        new Track(
-          navigationId,
-          MainActivity.getUserName(),
-          location.getLongitude(),
-          location.getLatitude(),
-          location.getSpeed() * 3.6
-        )
+      Track track = new Track(
+        navigationId,
+        MainActivity.getUserName(),
+        location.getLongitude(),
+        location.getLatitude(),
+        location.getSpeed() * 3.6
       );
+
+      Database.getInstance(getContext()).insertNewTrack(track);
+
+      if (firstTrack){
+        MainActivity.getNavigationItem().add(track);
+        firstTrack = false;
+      }
+
     }
 
   }

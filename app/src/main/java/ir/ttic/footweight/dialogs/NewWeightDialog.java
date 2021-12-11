@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -55,7 +57,7 @@ public class NewWeightDialog extends DialogFragment {
     btnMinus.setOnClickListener(this::onMinusClick);
     btnAddWeight.setOnClickListener(this::onAddWeightClick);
 
-    txtWeight.setText(String.format(weightText, weight));
+    txtWeight.setText(String.format(Locale.US, weightText, weight));
 
   }
 
@@ -72,12 +74,12 @@ public class NewWeightDialog extends DialogFragment {
 
   public void onAddClick(View view) {
     weight++;
-    txtWeight.setText(String.format(weightText, weight));
+    txtWeight.setText( String.format(Locale.US,weightText, weight));
   }
 
   public void onMinusClick(View view) {
     weight--;
-    txtWeight.setText(String.format(weightText, weight));
+    txtWeight.setText(String.format(Locale.US, weightText, weight));
   }
 
   public void onAddWeightClick(View view) {

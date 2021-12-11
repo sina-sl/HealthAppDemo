@@ -56,6 +56,7 @@ public class Database {
   public void insertNewWeight(Weight weight) {
     sqLiteDatabase.execSQL(
       String.format(
+        Locale.US,
         "insert into %s values('%s','%f')",
         weightTableName,
         weight.getDate(),
@@ -68,7 +69,7 @@ public class Database {
   @SuppressLint("DefaultLocale")
   public void insertNewTrack(Track track) {
     sqLiteDatabase.execSQL(
-      String.format(
+      String.format(Locale.US,
         "insert into %s values(%d,'%s',%f,%f,%f,datetime('now'));",
         trackTableName,
         track.getId(),
@@ -85,7 +86,8 @@ public class Database {
     List<Weight> weights = new ArrayList<>();
 
     Cursor cursor = sqLiteDatabase.rawQuery(
-      String.format("select * from %s", weightTableName),
+      String.format(Locale.US,
+        "select * from %s", weightTableName),
       null
     );
 
@@ -104,7 +106,9 @@ public class Database {
     List<Track> tracks = new ArrayList<>();
 
     Cursor cursor = sqLiteDatabase.rawQuery(
-      String.format("select * from (select * from %s order by Date asc) group by ID", trackTableName),
+      String.format(
+        Locale.US,
+        "select * from (select * from %s order by Date asc) group by ID", trackTableName),
       null
     );
 
@@ -143,7 +147,9 @@ public class Database {
     List<Track> tracks = new ArrayList<>();
 
     Cursor cursor = sqLiteDatabase.rawQuery(
-      String.format("select * from %s", trackTableName),
+      String.format(
+        Locale.US,
+        "select * from %s", trackTableName),
       null
     );
 
@@ -176,7 +182,7 @@ public class Database {
   }
 
   public void remove(Weight model) {
-    sqLiteDatabase.execSQL(String.format("delete from %s where Date='%s'", weightTableName, model.getDate()));
+    sqLiteDatabase.execSQL(String.format(Locale.US, "delete from %s where Date='%s'", weightTableName, model.getDate()));
   }
 
 }

@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import ir.ttic.footweight.MainActivity;
 import ir.ttic.footweight.R;
 import ir.ttic.footweight.database.Database;
 import ir.ttic.footweight.dialogs.NavigationDialog;
@@ -170,7 +171,7 @@ public class FootRaceFragment extends Fragment implements LocationListener {
       Database.getInstance(getContext()).insertNewTrack(
         new Track(
           navigationId,
-          "Sina",
+          MainActivity.getUserName(),
           location.getLongitude(),
           location.getLatitude(),
           location.getSpeed() * 3.6

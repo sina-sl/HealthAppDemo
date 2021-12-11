@@ -2,6 +2,8 @@ package ir.ttic.footweight;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -17,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 import ir.ttic.footweight.adapters.FragmentsAdapter;
 import ir.ttic.footweight.database.Database;
+import ir.ttic.footweight.dialogs.LoginDialog;
 import ir.ttic.footweight.fragments.FootRaceFragment;
 import ir.ttic.footweight.fragments.WeightCurveFragment;
 import ir.ttic.footweight.fragments.WeightFragment;
@@ -32,24 +35,49 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
   private static List<Weight> weightItems;
   private static List<Track> navigationItems;
 
+  private SharedPreferences sharedPreferences;
+
   private static boolean DEVICE_LOCATION_PERMISSIONS_GRANTED = false;
   private static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
   private static final String COARSE_LOCATION_PERMISSION = Manifest.permission.ACCESS_COARSE_LOCATION;
   private static final int locationRequestCode = 1234;
+  private static String userName;
 
 
   public static List<Weight> getWeightItems() {
     return weightItems;
   }
-
   public static List<Track> getNavigationItem() {
     return navigationItems;
+  }
+
+  public static String getUserName() {
+    return userName == null ? "none": userName;
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    sharedPreferences = getSharedPreferences(getApplicationInfo().name, Context.MODE_PRIVATE);
+    userName = sharedPreferences.getString("UserName","");
+
+    viewPager = findViewById(R.id.view_pager);
+    tableLayout = findViewById(R.id.tab_layout);
+    tableLayout.addOnTabSelectedListener(this);
+
+
+    if (userName.equals("")){
+
+      new LoginDialog((userName2)->{
+        userName = userName2;
+        sharedPreferences.edit()
+          .putString("UserName",userName2)
+          .apply();
+      }).show(getSupportFragmentManager(),"");
+
+    }
 
     if (weightItems == null) {
 
@@ -65,33 +93,35 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         runOnUiThread(()->{
 
-          viewPager = findViewById(R.id.view_pager);
-          tableLayout = findViewById(R.id.tab_layout);
-          tableLayout.addOnTabSelectedListener(this);
-
-          viewPager.setUserInputEnabled(false);
-          viewPager.setAdapter(
-            new FragmentsAdapter(
-              this,
-              new WeightFragment(),
-              new WeightCurveFragment(),
-              new FootRaceFragment()
-            )
-          );
-
-          new TabLayoutMediator(
-            tableLayout, viewPager, (tab, position) -> tab.setText(
-              "Weight,Curve,Race".split(",")[position])
-          ).attach();
-
+          config();
           progressDialog.dismiss();
 
-          checkLocationPermission();
-
         });
+
       }).start();
 
+    }else {
+      config();
     }
+  }
+
+  void config(){
+
+    viewPager.setUserInputEnabled(false);
+    viewPager.setAdapter(
+      new FragmentsAdapter(
+        this,
+        new WeightFragment(),
+        new WeightCurveFragment(),
+        new FootRaceFragment()
+      )
+    );
+
+    new TabLayoutMediator(
+      tableLayout, viewPager, (tab, position) -> tab.setText(
+      "Weight,Curve,Race".split(",")[position])
+    ).attach();
+    checkLocationPermission();
   }
 
   @Override

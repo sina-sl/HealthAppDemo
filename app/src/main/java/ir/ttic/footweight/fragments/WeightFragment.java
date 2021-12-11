@@ -45,6 +45,7 @@ public class WeightFragment extends Fragment {
 
     recyclerView.setAdapter(weightListAdapter);
     btnAddItem.setOnClickListener(this::onAddNewWeightClick);
+    btnAddItem.setOnLongClickListener(this::randomWeights);
 
     recyclerView.setLayoutManager(
       new LinearLayoutManager(
@@ -63,7 +64,7 @@ public class WeightFragment extends Fragment {
     weightListAdapter.notifyDataSetChanged();
   }
 
-  public void onAddWeight( Weight weightModel){
+  public void onAddWeight(Weight weightModel) {
 
     MainActivity.getWeightItems().add(weightModel);
     Database.getInstance(getContext()).insertNewWeight(weightModel);
@@ -74,14 +75,14 @@ public class WeightFragment extends Fragment {
   }
 
 
-  public void randomWeights(){
+  public boolean randomWeights(View v) {
 
-    for (int i = 0; i < 50; i++) {
+    List<Weight> weights = MainActivity.getWeightItems();
+
+    if (weights.size() == 0) {
 
       Weight weightModel = new Weight(
-        MainActivity.getWeightItems().get(
-          MainActivity.getWeightItems().size() - 1
-        ).getDate() + 86400000,
+        System.currentTimeMillis(),
         ((int) ((Math.random() * 50) + 40))
       );
 
@@ -93,13 +94,29 @@ public class WeightFragment extends Fragment {
 
     }
 
+    for (int i = 0; i < 50; i++) {
+
+      Weight weightModel = new Weight(weights.get(weights.size() - 1).getDate() + 86400000,
+        ((int) ((Math.random() * 50) + 40))
+      );
+
+      MainActivity.getWeightItems().add(weightModel);
+
+      weightListAdapter.notifyItemInserted(
+        MainActivity.getWeightItems().indexOf(weightModel)
+      );
+
+    }
+
+    return true;
+
   }
 
   public void onAddNewWeightClick(View v) {
 
     List<Weight> weights = MainActivity.getWeightItems();
 
-    if ( weights.size() > 0 && System.currentTimeMillis() - weights.get(weights.size() - 1).getDate() < 86400000) {
+    if (weights.size() > 0 && System.currentTimeMillis() - weights.get(weights.size() - 1).getDate() < 86400000) {
 
       Toast.makeText(
         getContext(),
@@ -109,7 +126,7 @@ public class WeightFragment extends Fragment {
 
     } else {
 
-      new NewWeightDialog(this).show(getParentFragmentManager(),null);
+      new NewWeightDialog(this).show(getParentFragmentManager(), null);
 
     }
 

@@ -23,7 +23,6 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:gravity="center"
-            android:hint="New Weight"
             android:id="@+id/layout_counter"
             android:layout_height="?attr/actionBarSize"
             android:layout_margin="10dp"
@@ -86,7 +85,7 @@
 
 
         <Button
-            android:id="@+id/btn_add_weight"
+            android:id="@+id/btn_login"
             android:layout_height="?attr/actionBarSize"
             android:layout_margin="10dp"
             android:layout_width="0dp"

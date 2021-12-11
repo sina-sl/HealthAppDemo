@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Database {
 
   private void createWeightTableIfNotExist() {
     sqLiteDatabase.execSQL(String.format(Locale.US,
-      "create table if not exists %s (Date real unique ,Weight real);",
+      "create table if not exists %s (Date INTEGER unique ,Weight INTEGER);",
       weightTableName
     ));
   }
@@ -46,7 +47,7 @@ public class Database {
   private void createTrackTableIfNotExist() {
     sqLiteDatabase.execSQL(String.format(Locale.US,
       "create table if not exists %s (" +
-        "ID real ,User varchar,Longitude real,Latitude real,Speed real,Date date);",
+        "ID INTEGER ,User varchar,Longitude INTEGER,Latitude INTEGER,Speed INTEGER,Date date);",
       trackTableName));
   }
 

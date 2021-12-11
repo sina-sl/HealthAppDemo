@@ -14,9 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import ir.ttic.footweight.MainActivity;
 import ir.ttic.footweight.R;
-import ir.ttic.footweight.database.Database;
 import ir.ttic.footweight.fragments.WeightFragment;
 import ir.ttic.footweight.model.Weight;
 
@@ -50,13 +48,12 @@ public class NewWeightDialog extends DialogFragment {
     btnAdd = view.findViewById(R.id.btn_add);
     btnMinus = view.findViewById(R.id.btn_minus);
     txtWeight = view.findViewById(R.id.txt_weight);
-    btnAddWeight = view.findViewById(R.id.btn_add_weight);
+    btnAddWeight = view.findViewById(R.id.btn_login);
 
 
     btnAdd.setOnClickListener(this::onAddClick);
     btnMinus.setOnClickListener(this::onMinusClick);
     btnAddWeight.setOnClickListener(this::onAddWeightClick);
-    btnAddWeight.setOnLongClickListener(this::onAddWeightLongClick);
 
     txtWeight.setText(String.format(weightText, weight));
 
@@ -93,16 +90,6 @@ public class NewWeightDialog extends DialogFragment {
     weightFragment.onAddWeight(weightModel);
 
     dismiss();
-  }
-
-  public boolean onAddWeightLongClick(View v) {
-
-    weightFragment.randomWeights();
-
-    dismiss();
-
-    return true;
-
   }
 
 }

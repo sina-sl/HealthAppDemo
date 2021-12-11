@@ -25,6 +25,7 @@ import com.anychart.graphics.vector.Fill;
 import com.anychart.graphics.vector.SolidFill;
 import com.anychart.graphics.vector.Stroke;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ir.ttic.footweight.MainActivity;
 import ir.ttic.footweight.R;
+import ir.ttic.footweight.model.Weight;
 
 public class WeightCurveFragment extends Fragment {
 
@@ -45,7 +47,7 @@ public class WeightCurveFragment extends Fragment {
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_weight_curve,container,false);
+    return inflater.inflate(R.layout.fragment_weight_curve, container, false);
   }
 
   @Override
@@ -69,7 +71,13 @@ public class WeightCurveFragment extends Fragment {
     cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
     cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
-    set.data(new ArrayList<>(MainActivity.getWeightItems()));
+    set.data(
+
+
+      (MainActivity.getWeightItems().isEmpty() ? arr : new ArrayList<>(MainActivity.getWeightItems()))
+
+    );
+//    set.data(new ArrayList<>(MainActivity.getWeightItems()));
     spline = cartesian.spline(
       set.mapAs(
         "{ x: 'x', value: 'value' }"),
@@ -81,11 +89,17 @@ public class WeightCurveFragment extends Fragment {
   }
 
 
+  static final private ArrayList arr = new ArrayList();
+
+  static {
+    arr.add(new Weight(System.currentTimeMillis(), 0));
+  }
+
   @Override
   public void onResume() {
     super.onResume();
 
-    spline.data(new ArrayList<>(MainActivity.getWeightItems()));
+    spline.data(MainActivity.getWeightItems().isEmpty() ? arr : new ArrayList<>(MainActivity.getWeightItems()));
 
   }
 
